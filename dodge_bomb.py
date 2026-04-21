@@ -19,7 +19,7 @@ def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]:
         tate = False
     return yoko, tate
 
-def game_over(screen: pg.Surface) -> None:
+def game_over(screen: pg.Surface) -> None: #演習1
     gm_img = pg.Surface((WIDTH,HEIGHT))
     gm_img.fill((0, 0, 0))
     gm_img.set_alpha(128)
@@ -42,7 +42,7 @@ def game_over(screen: pg.Surface) -> None:
     pg.display.update()
     time.sleep(5)
     
-def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
+def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:#演習2
     bb_imgs = []
     bb_accs = [a for a in range(1,11)]
 
@@ -53,7 +53,7 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
         bb_img.set_colorkey((0, 0, 0))
     return bb_imgs, bb_accs
 
-def get_kk_imgs() -> dict[tuple[int, int],pg.Surface]:
+def get_kk_imgs() -> dict[tuple[int, int],pg.Surface]: #演習3
     kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)
     kk_img_f = pg.transform.flip(kk_img, True, False)
     kk_dict = {
@@ -76,16 +76,16 @@ def main():
     kk_img = kk_imgs[(0, 0)]
     kk_rct = kk_img.get_rect()
     kk_rct.center = 300, 200
-    bb_img = pg.Surface((20,20))
-    pg.draw.circle(bb_img,(255, 0, 0), (10, 10), 10)
-    bb_img.set_colorkey((0, 0, 0)) 
-    kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)
-    kk_rct = kk_img.get_rect()
+    bb_img = pg.Surface((20,20)) # 爆弾用の空のSurfaceを作る
+    pg.draw.circle(bb_img,(255, 0, 0), (10, 10), 10) # 爆弾円を描く
+    bb_img.set_colorkey((0, 0, 0)) # 爆弾の黒い部分を透過させる
+    kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9) # 爆弾Rectを取得する
+    kk_rct = kk_img.get_rect() # 爆弾の初期横座標を設定する
     kk_rct.center = 300, 200
     bb_rct = bb_img.get_rect()
-    bb_rct.centerx = random.randint(0, WIDTH)
-    bb_rct.centery = random.randint(0, HEIGHT)
-    vx, vy = 5, 5
+    bb_rct.centerx = random.randint(0, WIDTH)# 爆弾の初期横座標を設定する
+    bb_rct.centery = random.randint(0, HEIGHT)# 爆弾の初期縦座標を設定する
+    vx, vy = 5, 5 # 爆弾の速度
 
     bb_imgs, bb_accs = init_bb_imgs()
     idx = 0
@@ -102,9 +102,9 @@ def main():
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
-        if kk_rct.colliderect(bb_rct):
+        if kk_rct.colliderect(bb_rct):# こうかとんと爆弾の衝突判定
             game_over(screen)
-            return
+            return  # ゲームオーバーの意味でmain関数から出る
         screen.blit(bg_img, [0, 0]) 
 
         idx = min(tmr // 500, 9)
@@ -130,18 +130,18 @@ def main():
         if key_lst[pg.K_RIGHT]:
             sum_mv= DELTA[pg.K_RIGHT]
         kk_rct.move_ip(sum_mv)
-        if check_bound(kk_rct) != (True, True):
+        if check_bound(kk_rct) != (True, True): # 画面外だったら
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         kk_img = kk_imgs[tuple(sum_mv)]
         screen.blit(kk_img, kk_rct)
         screen.blit(kk_img, kk_rct)
-        bb_rct.move_ip((vx, vy))
+        bb_rct.move_ip((vx, vy)) # 爆弾を移動させる
         yoko, tate = check_bound(bb_rct)
-        if not yoko:
+        if not yoko: # 横方向の判定
             vx *= -1
-        if not tate:
+        if not tate: # 縦方向の判定
             vy *= -1
-        screen.blit(bb_img, bb_rct)
+        screen.blit(bb_img, bb_rct)  # 爆弾を表示させる
         pg.display.update()
         tmr += 1
         clock.tick(50)
