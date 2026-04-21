@@ -24,14 +24,15 @@ def main():
 
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
+        DELTA = {pg.K_UP:(0, -5),pg.K_DOWN:(0, +5),pg.K_LEFT:(-5, 0),pg.K_RIGHT:(+5, 0)}
         if key_lst[pg.K_UP]:
-            sum_mv[1] -= 5
+            sum_mv= DELTA[pg.K_UP]
         if key_lst[pg.K_DOWN]:
-            sum_mv[1] += 5
+            sum_mv= DELTA[pg.K_DOWN]
         if key_lst[pg.K_LEFT]:
-            sum_mv[0] -= 5
+            sum_mv= DELTA[pg.K_LEFT]
         if key_lst[pg.K_RIGHT]:
-            sum_mv[0] += 5
+            sum_mv= DELTA[pg.K_RIGHT]
         kk_rct.move_ip(sum_mv)
         screen.blit(kk_img, kk_rct)
         pg.display.update()
